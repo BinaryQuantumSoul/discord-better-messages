@@ -1,10 +1,10 @@
 # BetterMessages
 Pack of BetterDiscord plugins to add new rendering features to discord messages
 
-## PLugins
-### LaTexRenderer
-![bm-latex](bm-colors.png)
-### ColorIndicator
+## Plugins
+### [LaTeX Renderer](plugins/LaTexRenderer)
+![bm-latex](bm-latex.png)
+### [ColorIndicator](plugins/ColorIndicator)
 ![bm-colors](bm-colors.png)
 ### Others ?
 Feel free to make a request
