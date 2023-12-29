@@ -1,0 +1,3 @@
+[submodule "plugins/LaTexRenderer"]
+	path = plugins/LaTexRenderer
+	url = https://github.com/BinaryQuantumSoul/discord-latex
