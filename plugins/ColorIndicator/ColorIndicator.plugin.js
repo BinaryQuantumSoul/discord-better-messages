@@ -2,7 +2,7 @@
  * @name ColorIndicator
  * @author QuantumSoul
  * @description Highlights color codes in discord chats
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 const CLASS_SCROLLER_INNER = BdApi.Webpack.getByKeys("navigationDescription", "scrollerInner")["scrollerInner"];
@@ -77,25 +77,21 @@ module.exports = class Plugin {
       if(!codeElement.classList.contains("changed-indicator")) {
         codeElement.classList.add("changed-indicator");
 
-        codeElement.innerHTML = codeElement.textContent.replace(colorCodeRegex, (match) => {
-          const textColor = this.calculateLuminance(this.colorToRgb(match)) < 0.5 ? 'white' : 'black';
+        const codeText = codeElement.textContent.slice();
+        const newCodeText = codeElement.textContent.replace(colorCodeRegex, (match) => {
+          const textColor = this.calculateLuminance(match) < 0.5 ? 'white' : 'black';
           return `<span style="background-color:${match}; color:${textColor};">${match}</span>`;
         });
+
+        if(newCodeText != codeText) {
+          codeElement.innerHTML = newCodeText;
+        } 
       }
     });
   };
 
-  colorToRgb = (colorString) => {
-    const div = document.createElement('div');
-    div.style.color = colorString;
-    document.body.appendChild(div);
-    const computedColor = window.getComputedStyle(div).color;
-    document.body.removeChild(div);
-    return computedColor;
-  }
-
-  calculateLuminance = (rgbString) => {
-    const rgbaColor = colorToRgb(rgbString);
+  calculateLuminance = (colorString) => {
+    const rgbaColor = colorToRgb(colorString);
     const match = rgbaColor.match(/(\d+(\.\d+)?)/g);
     if (!match || match.length < 3) {
         throw new Error('Invalid color format');
@@ -109,4 +105,13 @@ module.exports = class Plugin {
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b) * (isNaN(a) ? 1 : a) / 255;
     return luminance;
   };
+
+  colorToRgb = (colorString) => {
+    const div = document.createElement('div');
+    div.style.color = colorString;
+    document.body.appendChild(div);
+    const computedColor = window.getComputedStyle(div).color;
+    document.body.removeChild(div);
+    return computedColor;
+  }
 };
