@@ -2,7 +2,7 @@
  * @name ColorIndicator
  * @author QuantumSoul
  * @description Highlights color codes in discord chats
- * @version 0.0.1
+ * @version 1.0.0
  */
 
 const CLASS_SCROLLER_INNER = BdApi.Webpack.getByKeys("navigationDescription", "scrollerInner")["scrollerInner"];
@@ -71,26 +71,42 @@ module.exports = class Plugin {
   };
 
   parseMessage = (messageContent) => {
-    const colorCodeRegex = /#(?:[0-9a-fA-F]{3,6})\b/g;
+    const colorCodeRegex = /#(?:[0-9a-fA-F]{3,6})\b|rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)|rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*(?:0|1|0?\.?\d+)\s*\)|hsl\(\s*\d+\s*,\s*(?:\d+%)\s*,\s*(?:\d+%)\s*\)|hsla\(\s*\d+\s*,\s*(?:\d+%)\s*,\s*(?:\d+%)\s*,\s*(?:0|1|0?\.?\d+)\s*\)|(?<=color:\s*)(\w+)(?=\s*(?:!important)?\s*;)/g;
 
-    messageContent.querySelectorAll('span').forEach((span) => {
-      if (span.classList.contains('changed-indicator')) {
-        const textNode = document.createTextNode(span.textContent);
-        try {
-            span.parentNode.replaceChild(textNode, span);
-        } catch (error) {}
+    messageContent.querySelectorAll("code").forEach((codeElement) => {
+      if(!codeElement.classList.contains("changed-indicator")) {
+        codeElement.classList.add("changed-indicator");
+
+        codeElement.innerHTML = codeElement.textContent.replace(colorCodeRegex, (match) => {
+          const textColor = this.calculateLuminance(this.colorToRgb(match)) < 0.5 ? 'white' : 'black';
+          return `<span style="background-color:${match}; color:${textColor};">${match}</span>`;
+        });
       }
-    });
-
-    messageContent.innerHTML = messageContent.innerHTML.replace(colorCodeRegex, (match) => {
-      const textColor = this.isColorTooDark(match) ? 'white' : 'black';
-      return `<span class="changed-indicator inline" style="background-color:${match}; color:${textColor};">${match}</span>`;
     });
   };
 
-  isColorTooDark = (hexColor) => {
-    const bigint = parseInt(hexColor.slice(1), 16);
-    const rgb = { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
-    return 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b < 128;
+  colorToRgb = (colorString) => {
+    const div = document.createElement('div');
+    div.style.color = colorString;
+    document.body.appendChild(div);
+    const computedColor = window.getComputedStyle(div).color;
+    document.body.removeChild(div);
+    return computedColor;
+  }
+
+  calculateLuminance = (rgbString) => {
+    const rgbaColor = colorToRgb(rgbString);
+    const match = rgbaColor.match(/(\d+(\.\d+)?)/g);
+    if (!match || match.length < 3) {
+        throw new Error('Invalid color format');
+    }
+    const { r, g, b, a } = {
+        r: parseFloat(match[0]),
+        g: parseFloat(match[1]),
+        b: parseFloat(match[2]),
+        a: parseFloat(match[3])
+    };
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) * (isNaN(a) ? 1 : a) / 255;
+    return luminance;
   };
 };
