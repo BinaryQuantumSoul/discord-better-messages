@@ -2,7 +2,7 @@
  * @name ColorIndicator
  * @author QuantumSoul
  * @description Highlights color codes in discord chats
- * @version 1.0.1
+ * @version 1.0.2
  */
 
 const CLASS_SCROLLER_INNER = BdApi.Webpack.getByKeys("navigationDescription", "scrollerInner")["scrollerInner"];
@@ -91,7 +91,7 @@ module.exports = class Plugin {
   };
 
   calculateLuminance = (colorString) => {
-    const rgbaColor = colorToRgb(colorString);
+    const rgbaColor = this.colorToRgb(colorString);
     const match = rgbaColor.match(/(\d+(\.\d+)?)/g);
     if (!match || match.length < 3) {
         throw new Error('Invalid color format');
