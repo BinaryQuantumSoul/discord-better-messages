@@ -2,7 +2,7 @@
  * @name ColorIndicator
  * @author QuantumSoul
  * @description Highlights color codes in discord chats
- * @version 1.0.2
+ * @version 1.0.3
  */
 
 const CLASS_SCROLLER_INNER = BdApi.Webpack.getByKeys("navigationDescription", "scrollerInner")["scrollerInner"];
@@ -71,7 +71,7 @@ module.exports = class Plugin {
   };
 
   parseMessage = (messageContent) => {
-    const colorCodeRegex = /#(?:[0-9a-fA-F]{3,6})\b|rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)|rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*(?:0|1|0?\.?\d+)\s*\)|hsl\(\s*\d+\s*,\s*(?:\d+%)\s*,\s*(?:\d+%)\s*\)|hsla\(\s*\d+\s*,\s*(?:\d+%)\s*,\s*(?:\d+%)\s*,\s*(?:0|1|0?\.?\d+)\s*\)|(?<=color:\s*)(\w+)(?=\s*(?:!important)?\s*;)/g;
+    const colorCodeRegex = /#(?:[0-9a-fA-F]{3,6})\b|\b(?:rgb|rgba|hsl|hsla)\([^)]*\)|(?<=color:\s*)(\w+)(?=\s*(?:!important)?\s*;)/g;
 
     messageContent.querySelectorAll("code").forEach((codeElement) => {
       if(!codeElement.classList.contains("changed-indicator")) {
