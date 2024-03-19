@@ -3,6 +3,8 @@
  * @author QuantumSoul
  * @description Highlights color codes in discord chats
  * @version 1.0.3
+ * @source https://github.com/BinaryQuantumSoul/discord-better-messages
+ * @updateUrl https://raw.githubusercontent.com/BinaryQuantumSoul/discord-better-messages/main/plugins/ColorIndicator/ColorIndicator.plugin.js
  */
 
 const CLASS_SCROLLER_INNER = BdApi.Webpack.getByKeys("navigationDescription", "scrollerInner")["scrollerInner"];
