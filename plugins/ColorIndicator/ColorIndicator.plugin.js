@@ -2,7 +2,7 @@
  * @name ColorIndicator
  * @author QuantumSoul
  * @description Highlights color codes in discord chats
- * @version 1.0.3
+ * @version 1.0.4
  * @source https://github.com/BinaryQuantumSoul/discord-better-messages
  * @updateUrl https://raw.githubusercontent.com/BinaryQuantumSoul/discord-better-messages/main/plugins/ColorIndicator/ColorIndicator.plugin.js
  */
