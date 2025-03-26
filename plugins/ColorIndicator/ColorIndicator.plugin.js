@@ -75,7 +75,7 @@ module.exports = class Plugin {
   parseMessage = (messageContent) => {
     const colorCodeRegex = /#(?:[0-9a-fA-F]{3,6})\b|\b(?:rgb|rgba|hsl|hsla)\([^)]*\)|(?<=color:\s*)(\w+)(?=\s*(?:!important)?\s*;)/g;
 
-    messageContent.querySelectorAll("code").forEach((codeElement) => {
+    const spliceElement = (codeElement) => {
       if(!codeElement.classList.contains("changed-indicator")) {
         codeElement.classList.add("changed-indicator");
 
@@ -88,6 +88,15 @@ module.exports = class Plugin {
         if(newCodeText != codeText) {
           codeElement.innerHTML = newCodeText;
         } 
+      }
+    };
+    
+    messageContent.querySelectorAll("code").forEach((element) => {
+      if (element.classList.contains("hljs")) {
+        element.querySelectorAll("span").forEach(spliceElement);
+      }
+      else {
+        spliceElement(element);
       }
     });
   };
